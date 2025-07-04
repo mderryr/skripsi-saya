@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* declare module '*.module.css'; */
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+
+/* 
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+
+.logo {
+  margin-right: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+}
+
+.metaData {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.metaLeft {
+  width: 100%;
+}
+
+.metaLeft p {
+  margin: 5px 0;
+}
+
+.content {
+  line-height: 1.6;
+}
+
+.paragraph {
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.dataTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.dataTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.dataTable tr:hover {
+  background-color: #ddd;
+}
+
+.chartContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart {
+  width: 48%;
+}
+
+.chart h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.footer {
+  text-align: right;
+  margin-top: 30px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.signature {
+  margin-top: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #333;
+  display: inline-block;
+  padding-bottom: 5px;
+} */
+
+/* Responsive Design */
+/* @media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .logo {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .chartContainer {
+    flex-direction: column;
+  }
+
+  .chart {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+} */
+/* styles/pdf.css */
+/* @page {
+  size: A4;
+  margin: 0;
+} */
+
+/* .report-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-page {
+  width: 210mm;   
+  height: 297mm; 
+  margin: 0;
+  padding: 20mm;
+  box-sizing: border-box;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+}
+
+.pdf-page:last-child {
+  page-break-after: avoid;
+} */
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

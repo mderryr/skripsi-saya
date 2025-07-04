@@ -1,0 +1,196 @@
+
+// datasource dbRaw {
+//   provider = "cockroachdb"
+//   url      = env("DATABASE_URL")
+//   // directUrl = env("DATABASE_URL_DIRECT")
+  
+// }
+
+// model User {
+//   id            BigInt            @id @default(autoincrement())
+//   idUser        String           @unique
+//   nomerTelp     String?          @unique
+//   username      String           @unique
+//   name          String
+//   password      String
+//   admin         Boolean?         @default(false)
+//   idTempat      BigInt
+//   tempat        TempatKonservasi @relation(fields: [idTempat], references: [id])
+//   PenyuNaik     PenyuNaik[]
+//   TelurDikerami TelurDikerami[]
+//   TelurMenetas  TelurMenetas[]
+//   InkubasiPenyu InkubasiPenyu[]
+//   PenyuMati     PenyuMati[]
+//   Pelepasan     Pelepasan[]
+
+
+// }
+
+// model TempatKonservasi {
+//   id     BigInt     @id @default(autoincrement())
+//   idDok  String  @unique
+//   nama   String
+//   alamat String
+//   foto   String?
+//   user   User[]
+
+// }
+
+// model JenisPenyu {
+//   id              BigInt             @id @default(autoincrement())
+//   nama            String
+//   namaIlmiah      String?
+//   penyuMati       PenyuMati[]
+//   penyuMenetas    TelurMenetas[]
+//   penyuDiinkubasi InkubasiPenyu[]
+
+
+// }
+
+// model PenyuNaik {
+//   id                BigInt             @id @default(autoincrement())
+//   idDok             String          @unique
+//   dikerami          Boolean?        @default(false)
+//   jumlahPenyu       Int?            @default(0)
+//   penyuBertelur     Boolean         @default(true)
+//   telurDiselamatkan Int?
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime?       @default(now())
+//   update            DateTime?       @updatedAt
+//   idpenanggungJawab String?
+//   idZona            BigInt?
+//   zona              Zona?           @relation(fields: [idZona], references: [id])
+//   user              User?           @relation(fields: [idpenanggungJawab], references: [idUser])
+//   telurdikerami     TelurDikerami[]
+
+//   @@index([idZona])
+//   @@index([idpenanggungJawab])
+
+// }
+
+// model TelurDikerami {
+//   id                BigInt            @id @default(autoincrement())
+//   idDok             String         @unique
+//   menetas           Boolean?       @default(false)
+//   telurBaik         Int?
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime       @default(now())
+//   update            DateTime?      @updatedAt
+//   idpenanggungJawab String?
+//   idPenyuNaik       String?
+//   penyuNaik         PenyuNaik?     @relation(fields: [idPenyuNaik], references: [idDok])
+//   user              User?          @relation(fields: [idpenanggungJawab], references: [idUser])
+//   telurMenetas      TelurMenetas[]
+
+//   @@index([idPenyuNaik])
+//   @@index([idpenanggungJawab])
+
+// }
+
+// model TelurMenetas {
+//   id                BigInt             @id @default(autoincrement())
+//   idDok             String          @unique
+//   diinkubasi        Boolean?        @default(false)
+//   telurMenetas      Int?
+//   telurRusak        Int?
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime        @default(now())
+//   update            DateTime?       @updatedAt
+//   idpenanggungJawab String?
+//   idPenyu           BigInt?
+//   idPenyuDikerami   String?
+//   Inkubasi          InkubasiPenyu[]
+//   telurDikerami     TelurDikerami?  @relation(fields: [idPenyuDikerami], references: [idDok])
+//   penyu             JenisPenyu?     @relation(fields: [idPenyu], references: [id])
+//   user              User?           @relation(fields: [idpenanggungJawab], references: [idUser])
+
+//   @@index([idPenyu])
+//   @@index([idPenyuDikerami])
+//   @@index([idpenanggungJawab])
+// }
+
+// model InkubasiPenyu {
+//   id                BigInt           @id @default(autoincrement())
+//   idDok             String        @unique
+//   JumlahTukik       Int
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime      @default(now())
+//   update            DateTime?     @updatedAt
+//   idpenanggungJawab String?
+//   idInkubator       BigInt
+//   idPenyu           BigInt?
+//   idPenyuMenetas    String?
+//   inkubator         Inkubator     @relation(fields: [idInkubator], references: [id])
+//   penyuMenetas      TelurMenetas? @relation(fields: [idPenyuMenetas], references: [idDok])
+//   penyu             JenisPenyu?   @relation(fields: [idPenyu], references: [id])
+//   user              User?         @relation(fields: [idpenanggungJawab], references: [idUser])
+
+//   @@index([idInkubator])
+//   @@index([idPenyu])
+//   @@index([idPenyuMenetas])
+//   @@index([idpenanggungJawab])
+// }
+
+// model PenyuMati {
+//   id                BigInt       @id @default(autoincrement())
+//   idDok             String    @unique
+//   penyuMati         Int?
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime  @default(now())
+//   update            DateTime? @updatedAt
+//   idpenanggungJawab String?
+
+//   idPenyu     BigInt?
+//   idInkubator BigInt?
+//   Inkubasi    Inkubator?  @relation(fields: [idInkubator], references: [id])
+//   penyu       JenisPenyu? @relation(fields: [idPenyu], references: [id])
+//   user        User?       @relation(fields: [idpenanggungJawab], references: [idUser])
+
+//   @@index([idPenyu])
+//   @@index([idInkubator])
+//   @@index([idpenanggungJawab])
+// }
+
+// model Pelepasan {
+//   id                BigInt      @id @default(autoincrement())
+//   idDok             String   @unique
+//   JumlahTukik       Int
+//   tanggalData       DateTime
+//   Keterangan        String?
+//   create            DateTime @default(now())
+//   update            DateTime @updatedAt
+//   idpenanggungJawab String?
+
+//   idInkubator BigInt?
+//   Inkubasi    Inkubator? @relation(fields: [idInkubator], references: [id])
+//   user        User?      @relation(fields: [idpenanggungJawab], references: [idUser])
+
+//   @@index([idpenanggungJawab])
+//   @@index([idInkubator])
+// }
+
+// model Inkubator {
+//   id            BigInt             @id @default(autoincrement())
+//   namaInkubator String
+//   tukikHidup    Int?            @default(0)
+//   tukikMati     Int?            @default(0)
+//   berfungsi     Boolean         @default(true)
+//   keterangan    String?
+//   tukikAda      Boolean         @default(false)
+//   penyuInkubasi InkubasiPenyu[]
+//   pelepasan     Pelepasan[]
+//   penyumati     PenyuMati[]
+// }
+
+// model Zona {
+//   id         BigInt         @id @default(autoincrement())
+//   nama       String
+//   keterangan String
+//   PenyuNaik  PenyuNaik[]
+
+// }

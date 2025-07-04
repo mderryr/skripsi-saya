@@ -1,0 +1,257 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+  schemas  = ["DataKonservasi", "Report"]
+}
+
+generator dbml {
+  provider   = "prisma-dbml-generator"
+  output     = "../dbml"
+  outputName = "awesome.dbml"
+  projectName = "Pendataan Penyu"
+  projectDatabaseType = "cockroachdb"
+}
+
+model User {
+  id            BigInt           @id @default(autoincrement())
+  idUser        String           @unique
+  nomerTelp     String?          @unique
+  username      String           @unique
+  name          String
+  password      String
+  admin         Boolean?         @default(false)
+  idTempat      String
+  InkubasiPenyu InkubasiPenyu[]
+  Pelepasan     Pelepasan[]
+  PenyuMati     PenyuMati[]
+  PenyuNaik     PenyuNaik[]
+  TelurDikerami TelurDikerami[]
+  TelurMenetas  TelurMenetas[]
+  tempat        TempatKonservasi @relation(fields: [idTempat], references: [idTempat])
+
+  @@schema("DataKonservasi")
+}
+
+model TempatKonservasi {
+  id       BigInt  @id @default(autoincrement())
+  idTempat String  @unique
+  nama     String
+  alamat   String
+  foto     String?
+  user     User[]
+
+  @@schema("DataKonservasi")
+}
+
+model JenisPenyu {
+  id              BigInt          @id @default(autoincrement())
+  idJenisPenyu    String          @unique
+  nama            String
+  namaIlmiah      String?
+  penyuDiinkubasi InkubasiPenyu[]
+  penyuMati       PenyuMati[]
+  penyuMenetas    TelurMenetas[]
+
+  @@schema("DataKonservasi")
+}
+
+model PenyuNaik {
+  id                BigInt          @id @default(autoincrement())
+  idDok             String          @unique
+  dikerami          Boolean?        @default(false)
+  jumlahPenyu       Int?            @default(0)
+  penyuBertelur     Boolean         @default(true)
+  telurDiselamatkan Int?
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime?       @default(now())
+  update            DateTime?       @updatedAt
+  idpenanggungJawab String?
+  idZona            BigInt?
+  zona              Zona?           @relation(fields: [idZona], references: [id])
+  user              User?           @relation(fields: [idpenanggungJawab], references: [idUser])
+  telurdikerami     TelurDikerami[]
+
+  @@index([idZona])
+  @@index([idpenanggungJawab])
+  @@schema("DataKonservasi")
+}
+
+model TelurDikerami {
+  id                BigInt         @id @default(autoincrement())
+  idDok             String         @unique
+  menetas           Boolean?       @default(false)
+  telurBaik         Int?
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime       @default(now())
+  update            DateTime?      @updatedAt
+  idpenanggungJawab String?
+  idPenyuNaik       String?
+  penyuNaik         PenyuNaik?     @relation(fields: [idPenyuNaik], references: [idDok])
+  user              User?          @relation(fields: [idpenanggungJawab], references: [idUser])
+  telurMenetas      TelurMenetas[]
+
+  @@index([idPenyuNaik])
+  @@index([idpenanggungJawab])
+  @@schema("DataKonservasi")
+}
+
+model TelurMenetas {
+  id                BigInt          @id @default(autoincrement())
+  idDok             String          @unique
+  diinkubasi        Boolean?        @default(false)
+  telurMenetas      Int?
+  telurRusak        Int?
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime        @default(now())
+  update            DateTime?       @updatedAt
+  idpenanggungJawab String?
+  idPenyu           String?
+  idPenyuDikerami   String?         @unique
+  Inkubasi          InkubasiPenyu[]
+  telurDikerami     TelurDikerami?  @relation(fields: [idPenyuDikerami], references: [idDok])
+  penyu             JenisPenyu?     @relation(fields: [idPenyu], references: [idJenisPenyu])
+  user              User?           @relation(fields: [idpenanggungJawab], references: [idUser])
+
+  @@index([idPenyu])
+  @@index([idPenyuDikerami])
+  @@index([idpenanggungJawab])
+  @@schema("DataKonservasi")
+}
+
+model InkubasiPenyu {
+  id                BigInt        @id @default(autoincrement())
+  idDok             String        @unique
+  JumlahTukik       Int
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime      @default(now())
+  update            DateTime?     @updatedAt
+  idpenanggungJawab String?
+  idInkubator       String
+  idPenyu           String?
+  idPenyuMenetas    String?       @unique
+  inkubator         Inkubator     @relation(fields: [idInkubator], references: [idInkubator])
+  penyuMenetas      TelurMenetas? @relation(fields: [idPenyuMenetas], references: [idDok])
+  penyu             JenisPenyu?   @relation(fields: [idPenyu], references: [idJenisPenyu])
+  user              User?         @relation(fields: [idpenanggungJawab], references: [idUser])
+
+  @@index([idInkubator])
+  @@index([idPenyu])
+  @@index([idPenyuMenetas])
+  @@index([idpenanggungJawab])
+  @@schema("DataKonservasi")
+}
+
+model PenyuMati {
+  id                BigInt      @id @default(autoincrement())
+  idDok             String      @unique
+  penyuMati         Int?
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime    @default(now())
+  update            DateTime?   @updatedAt
+  idpenanggungJawab String?
+  idPenyu           String?
+  idInkubator       String?
+  Inkubasi          Inkubator?  @relation(fields: [idInkubator], references: [idInkubator])
+  penyu             JenisPenyu? @relation(fields: [idPenyu], references: [idJenisPenyu])
+  user              User?       @relation(fields: [idpenanggungJawab], references: [idUser])
+
+  @@index([idPenyu])
+  @@index([idInkubator])
+  @@index([idpenanggungJawab])
+  @@schema("DataKonservasi")
+}
+
+model Pelepasan {
+  id                BigInt     @id @default(autoincrement())
+  idDok             String     @unique
+  JumlahTukik       Int
+  tanggalData       DateTime
+  Keterangan        String?
+  create            DateTime   @default(now())
+  update            DateTime   @updatedAt
+  idpenanggungJawab String?
+  idInkubator       String?
+  Inkubasi          Inkubator? @relation(fields: [idInkubator], references: [idInkubator])
+  user              User?      @relation(fields: [idpenanggungJawab], references: [idUser])
+
+  @@index([idpenanggungJawab])
+  @@index([idInkubator])
+  @@schema("DataKonservasi")
+}
+
+model Inkubator {
+  id            BigInt          @id @default(autoincrement())
+  idInkubator   String          @unique
+  namaInkubator String
+  tukikHidup    Int?            @default(0)
+  tukikMati     Int?            @default(0)
+  berfungsi     Boolean         @default(true)
+  keterangan    String?
+  tukikAda      Boolean         @default(false)
+  penyuInkubasi InkubasiPenyu[]
+  pelepasan     Pelepasan[]
+  penyumati     PenyuMati[]
+
+  @@schema("DataKonservasi")
+}
+
+model Zona {
+  id         BigInt      @id @default(autoincrement())
+  idZona     String      @unique
+  nama       String
+  keterangan String
+  PenyuNaik  PenyuNaik[]
+
+  @@schema("DataKonservasi")
+}
+
+model PenyimpananBulanan {
+  id                     BigInt    @id @default(autoincrement())
+  idDok                  String    @unique
+  Bulan                  Int
+  Tahun                  Int
+  PenyuNaikTakBertelur   Int
+  PenyuNaikBertelur      Int
+  TotalTelurDiselamatkan Int
+  TotalTelurMenetas      Int
+  TotalTelurTakMenetas   Int
+  TotalTukikMati         Int
+  TotalTukikDilepaskan   Int
+  TanggalDibuat          DateTime  @default(now())
+  TanggalUpdate          DateTime?
+  Tempat                 String
+  idUser                 String
+  Logs                   Json?
+
+  @@schema("Report")
+}
+
+model PenyimpananTahunan {
+  id                     BigInt    @id @default(autoincrement())
+  idDok                  String    @unique
+  Tahun                  Int
+  PenyuNaikTakBertelur   Int
+  PenyuNaikBertelur      Int
+  TotalTelurDiselamatkan Int
+  TotalTelurMenetas      Int
+  TotalTelurTakMenetas   Int
+  TotalTukikMati         Int
+  TotalTukikDilepaskan   Int
+  TanggalDibuat          DateTime  @default(now())
+  TanggalUpdate          DateTime?
+  Tempat                 String
+  idUser                 String
+  Logs                   Json?
+
+  @@schema("Report")
+}
